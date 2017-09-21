@@ -45,26 +45,57 @@ body{
 }
 
 #buttons {
-    margin: 10px;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    margin: 20px 30px 30px;
+    position: relative;
+    height: 230px;
+    width: 240px;
+    display: inline-block;      
 }
-button {
-    width: 50px;
-    height: 40px;
+button, input[type='button'] {
+    width: 20%;
+    height: 15%;
     background-color: #3a3a3a;
     font-size: 16px;
     font-weight: bold;
     font-family: inherit;
     color: white;
-    margin: 10px;
+    position: absolute;
 }
 
-#eq {
-    height: 100px;
+.col1 {
+    left: 0;
+}
+.col2 {
+    left: 26.7%;
+}
+.col3 {
+    left: 53.4%;
+}
+.col4 {
+    left: 80%;
 }
 
-#zero {
-    width: 120px;
+.row1 {
+    top: 0;
+}
+.row2{
+    top: 21%;
+}
+.row3{
+    top: 42%;
+}
+.row4{
+    top: 63%;
+}
+.row5{
+    top: 84%;
+}
+
+
+.eq {
+    height: 36%;
+}
+
+.zero {
+    width: calc(46.7%);
 }
