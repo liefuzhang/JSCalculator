@@ -9,6 +9,8 @@ body{
     height: 400px;
     margin: 100px auto;
     text-align: center;
+    border: 2px solid #908b85;
+    border-radius: 20px;
 }
 
 #title {
@@ -27,6 +29,9 @@ body{
     height: 60px;
     text-align: right;
     border: 1px solid #aaa;
+    border: 2px solid #b4b39d;
+    border-radius: 6px;
+    background-color: #c3c2ab;
 }
 
 #current {
@@ -51,7 +56,7 @@ body{
     width: 240px;
     display: inline-block;      
 }
-button, input[type='button'] {
+button{
     width: 20%;
     height: 15%;
     background-color: #3a3a3a;
@@ -60,6 +65,18 @@ button, input[type='button'] {
     font-family: inherit;
     color: white;
     position: absolute;
+    box-shadow: 0px 3px 0px 0px #222121, inset -1px -3px 10px 1px #515151;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+}
+button:nth-child(1), button:nth-child(2) {
+    background-color: #a72d45;
+    box-shadow: 0px 3px 0px 0px #671c2a;
+}
+button:active{
+    box-shadow: none;
+    transform: translate(0,3px);
 }
 
 .col1 {
@@ -98,4 +115,9 @@ button, input[type='button'] {
 
 .zero {
     width: calc(46.7%);
+}
+
+#footer{
+    margin-top: 40px;
+    color: #111;
 }

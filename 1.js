@@ -30,18 +30,118 @@ function addButtons() {
     document.getElementById("buttons").appendChild(btn);
 }
 
+var overflown = false;
+var evaluated = false;
 var memory = {
     value: '',
-    setValue: function(val) { this.value = val; $('#memory').text(val); },
+    setValue: function (val) {
+        if (overflown) return;
+        if (val.length > 22) {
+            this.value = "0";
+            current.setValue("0");
+            overflown = true;
+            $('#memory').text("Digit Limit Met");
+        } else {
+            this.value = val; $('#memory').text(val);
+        }
+    },
+    clear: function () { this.setValue("0"); },
+    clearCurrent: function (cur) {
+        var i = this.value.lastIndexOf(cur);
+        if (i === this.value.length - cur.length) {
+            this.setValue(this.value.slice(0, i));
+            if (this.value.length == 0) {
+                this.setValue("0");
+            }
+        }
+    }
 };
 var current = {
     value: '',
-    setValue: function(val) { this.value = val; $('#current').text(val); },
+    setValue: function (val) {
+        if (overflown) return;
+        if (val.length > 8) {
+            current.setValue("0");
+            memory.setValue("0");
+            overflown = true;
+            $('#memory').text("Digit Limit Met");
+        } else {
+            this.value = val; $('#current').text(val);
+        }
+    },
+    clearCurrent: function () { this.setValue("0"); }
 };
 
 function buttonClicked(label) {
     if (/[0-9]/.test(label)) {
-        memory.setValue(memory.value+label);
-        current.setValue(current.value+label);
+        if (evaluated) {
+            memory.setValue("0");
+            current.setValue("0");
+            evaluated = false;
+        }
+        overflown = false;
+        memory.setValue((memory.value === "0" ? "" : memory.value) + label);
+        current.setValue((current.value === "0" || isNaN(current.value) ? "" : current.value) + label);
+    } else if (label === 'AC') {
+        if (evaluated) {
+            evaluated = false;
+        }
+        memory.clear();
+        current.clearCurrent();
+    } else if (label === 'CE') {
+        if (evaluated) {
+            memory.clear();
+            current.clearCurrent();
+            evaluated = false;
+            return;
+        }
+        memory.clearCurrent(current.value);
+        current.clearCurrent();
+    } else if (label === "&divide") {
+        label = "/";
+        if (evaluated) {
+            memory.setValue(current.value);
+            evaluated = false;
+        }
+        if (memory.value !== "0" && !isNaN(current.value)) {
+            memory.setValue(memory.value + label);
+            current.setValue(label);
+        }
+    } else if (label === "&times") {
+        label = "x";
+        if (evaluated) {
+            memory.setValue(current.value);
+            evaluated = false;
+        }
+        if (memory.value !== "0" && !isNaN(current.value)) {
+            memory.setValue(memory.value + label);
+            current.setValue(label);
+        }
+    } else if (label === "+" || label === "-") {
+        if (evaluated) {
+            memory.setValue(current.value);
+            evaluated = false;
+        }
+        if (memory.value !== "0" && !isNaN(current.value)) {
+            memory.setValue(memory.value + label);
+            current.setValue(label);
+        }
+    } else if (label === ".") {
+        if (evaluated) {
+            memory.setValue("0");
+            current.setValue("0");
+            evaluated = false;
+        }
+        overflown = false;
+        if (current.value.indexOf(label) !== -1) return;
+        memory.setValue(memory.value + label);
+        current.setValue(current.value + label);
+    } else if (label === "=") {
+        if (memory.value === "0" || isNaN(current.value)) return;
+        var exp = memory.value.replace(/x/g, "*");
+        var res = eval(exp);
+        memory.setValue(memory.value + "=" + res);
+        current.setValue(res);
+        evaluated = true;
     }
 }
