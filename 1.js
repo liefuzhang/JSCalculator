@@ -32,6 +32,7 @@ function addButtons() {
 
 var overflown = false;
 var evaluated = false;
+var found = false;
 var memory = {
     value: '',
     setValue: function (val) {
@@ -68,11 +69,27 @@ var current = {
         } else {
             this.value = val; $('#current').text(val);
         }
+
+        // find me
+        if (val == 1124) {
+            memory.setValue("Leif's phone unlocked!");
+            found = true;
+        } else if (val == 11.24) {
+            memory.setValue("Leif's favorite date");
+            found = true;
+        } else if (val.toString() == "7.20") {
+            memory.setValue("Pricess's birthday~");            
+            found = true;
+        }
     },
     clearCurrent: function () { this.setValue("0"); }
 };
 
 function buttonClicked(label) {
+    if (found == true) {
+        found = false;
+        memory.setValue(current.value);
+    }
     if (/[0-9]/.test(label)) {
         if (evaluated) {
             memory.setValue("0");
@@ -103,7 +120,7 @@ function buttonClicked(label) {
             memory.setValue(current.value);
             evaluated = false;
         }
-        if (memory.value !== "0" && !isNaN(current.value)) {
+        if (!isNaN(current.value)) {
             memory.setValue(memory.value + label);
             current.setValue(label);
         }
@@ -113,7 +130,7 @@ function buttonClicked(label) {
             memory.setValue(current.value);
             evaluated = false;
         }
-        if (memory.value !== "0" && !isNaN(current.value)) {
+        if (!isNaN(current.value)) {
             memory.setValue(memory.value + label);
             current.setValue(label);
         }
@@ -122,7 +139,7 @@ function buttonClicked(label) {
             memory.setValue(current.value);
             evaluated = false;
         }
-        if (memory.value !== "0" && !isNaN(current.value)) {
+        if (!isNaN(current.value)) {
             memory.setValue(memory.value + label);
             current.setValue(label);
         }
@@ -140,8 +157,11 @@ function buttonClicked(label) {
         if (memory.value === "0" || isNaN(current.value)) return;
         var exp = memory.value.replace(/x/g, "*");
         var res = eval(exp);
-        memory.setValue(memory.value + "=" + res);
-        current.setValue(res);
+        if (res.toString().length > 8 && res < 99999999) {
+            res = res.toPrecision(res < 1 ? 6 : 7);
+        }
+        memory.setValue(memory.value + "=" + Number(res));
+        current.setValue(Number(res));
         evaluated = true;
     }
 }
