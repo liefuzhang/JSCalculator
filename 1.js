@@ -55,6 +55,9 @@ var memory = {
                 this.setValue("0");
             }
         }
+        if (this.value[this.value.length - 1] === ".") {
+            this.setValue(this.value.slice(0, this.value.length - 1));
+        }
     }
 };
 var current = {
@@ -78,7 +81,7 @@ var current = {
             memory.setValue("Leif's favorite date");
             found = true;
         } else if (val.toString() == "7.20") {
-            memory.setValue("Pricess's birthday~");            
+            memory.setValue("Pricess's birthday~");
             found = true;
         }
     },
