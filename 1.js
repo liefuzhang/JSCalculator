@@ -100,8 +100,11 @@ function buttonClicked(label) {
             evaluated = false;
         }
         overflown = false;
+        if (/[^.\d]0$/.test(memory.value)) {
+            memory.value = memory.value.slice(0, memory.value.length - 1);
+        }
         memory.setValue((memory.value === "0" ? "" : memory.value) + label);
-        current.setValue((current.value === "0" || isNaN(current.value) ? "" : current.value) + label);
+        current.setValue((current.value === "0" || (isNaN(current.value) && current.value !== ".") ? "" : current.value) + label);
     } else if (label === 'AC') {
         if (evaluated) {
             evaluated = false;
@@ -115,29 +118,13 @@ function buttonClicked(label) {
             evaluated = false;
             return;
         }
+        if (/[\+\-x\/]/.test(memory.value[memory.value.length - 1])) return;
         memory.clearCurrent(current.value);
         current.clearCurrent();
-    } else if (label === "&divide") {
-        label = "/";
-        if (evaluated) {
-            memory.setValue(current.value);
-            evaluated = false;
-        }
-        if (!isNaN(current.value)) {
-            memory.setValue(memory.value + label);
-            current.setValue(label);
-        }
-    } else if (label === "&times") {
-        label = "x";
-        if (evaluated) {
-            memory.setValue(current.value);
-            evaluated = false;
-        }
-        if (!isNaN(current.value)) {
-            memory.setValue(memory.value + label);
-            current.setValue(label);
-        }
-    } else if (label === "+" || label === "-") {
+    } else if (label === "&divide" || label === "&times" || label === "+" || label === "-") {
+        if (label === "&divide") label = "/";
+        if (label === "&times") label = "x";
+        if (/[\+\-x\/]/.test(memory.value[memory.value.length - 1])) return;
         if (evaluated) {
             memory.setValue(current.value);
             evaluated = false;
@@ -152,10 +139,12 @@ function buttonClicked(label) {
             current.setValue("0");
             evaluated = false;
         }
-        overflown = false;
         if (current.value.indexOf(label) !== -1) return;
+        overflown = false;
+        current.setValue(((isNaN(current.value)
+            || (current.value === "0"
+                && memory.value[memory.value.length - 1] !== "0")) ? "" : current.value) + label);
         memory.setValue(memory.value + label);
-        current.setValue(current.value + label);
     } else if (label === "=") {
         if (memory.value === "0" || isNaN(current.value)) return;
         var exp = memory.value.replace(/x/g, "*");
